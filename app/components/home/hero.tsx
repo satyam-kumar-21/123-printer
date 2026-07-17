@@ -13,29 +13,17 @@ export default function Hero() {
             {/* Left */}
             <div className="relative z-20 flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-14">
 
-              {/* Logo + Heading */}
+              {/* Heading Section */}
               <div className="flex items-center gap-5">
-
-                <div className="relative h-16 w-16 shrink-0 md:h-20 md:w-20">
-                  <Image
-                    src="/hp-icon.png"
-                    alt="HP"
-                    fill
-                    priority
-                    className="object-contain"
-                  />
-                </div>
-
                 <div>
                   <h1 className="text-3xl font-semibold leading-tight text-white md:text-4xl xl:text-5xl">
-                    Exclusive Printer Support
+                    Exclusive Tech Support
                   </h1>
 
                   <p className="mt-3 max-w-xl text-base leading-7 text-white/90 md:text-lg">
-                    Call now to speak directly with a live HP+ support expert.
+                    Call now to speak directly with a live device support expert.
                   </p>
                 </div>
-
               </div>
 
               {/* Card */}
@@ -76,8 +64,7 @@ export default function Hero() {
 
                   <li>
                     Our priority is to take care of you. Call us to resolve
-                    questions about HP+ and receive assistance with printer
-                    setup.
+                    questions about your setup and receive direct assistance with initialization.
                   </li>
 
                 </ul>

@@ -1,3 +1,22 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: 'HP Simplified Light';
+    /* Added leading slashes to point to the public directory */
+    src: url('/css/font/HP Simplified Light.woff2') format('woff2'),
+         url('/css/font/HP Simplified Light.woff') format('woff'),
+         url('/css/font/HP Simplified Light.ttf') format('truetype'),
+         url('/css/font/HP Simplified Light.eot'); /* IE9 Compat Modes */
+    font-weight: normal;
+    font-style: normal;
+}
 
+/* Apply the custom font globally */
+body, select, input, label, p, button, h1, h2, h3, h4, h5 {
+    font-family: 'HP Simplified Light', sans-serif;
+}
+
+/* Optional: Register it with Tailwind v4 if you want to use classes like 'font-hp' */
+@theme {
+    --font-hp: 'HP Simplified Light', sans-serif;
+}
