@@ -23,7 +23,7 @@ export default function InstallationFailedPage() {
                 <meta name="robots" content="noindex, nofollow" />
             </Helmet>
             <div
-                className="md:min-h-screen min-h-screen flex flex-col justify-center items-center bg-cover bg-center px-2"
+                className="md:min-h-[92vh] min-h-screen flex flex-col justify-center items-center bg-cover bg-center px-2"
                 style={{
                     backgroundImage: "url('/hero_background_image.webp')",
                 }}
