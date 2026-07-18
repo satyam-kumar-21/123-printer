@@ -107,7 +107,7 @@ export default function Hero() {
           {/* Mobile Image */}
           <div className="relative h-[260px] lg:hidden">
             <Image
-              src="/hero-home.jpg"
+              src="/hero-home.webp"
               alt="Customer Support"
               fill
               priority
