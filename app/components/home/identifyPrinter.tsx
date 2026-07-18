@@ -161,11 +161,11 @@ export default function IdentifyPrinter() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSearch = (valueToSubmit = search) => {
-    if (!valueToSubmit.trim()) return;
+  const handleSearch = () => {
+    if (!search.trim()) return;
 
     if (typeof window !== "undefined") {
-      localStorage.setItem("printerModel", valueToSubmit.trim());
+      localStorage.setItem("printerModel", search.trim());
     }
     router.push("/hp-smart-install/");
   };
@@ -218,9 +218,8 @@ export default function IdentifyPrinter() {
                     <button
                       type="button"
                       onClick={() => {
-                        setSearch(model);
-                        setShowDropdown(false);
-                        handleSearch(model);
+                        setSearch(model);       // Fills search field input text
+                        setShowDropdown(false); // Only dismisses dropdown visibility
                       }}
                       className="w-full text-left px-5 py-3 text-sm text-gray-800 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors duration-150 cursor-pointer"
                     >
@@ -233,7 +232,7 @@ export default function IdentifyPrinter() {
           </div>
 
           <button
-            onClick={() => handleSearch()}
+            onClick={handleSearch}
             className="mt-5 rounded bg-[#024AD8] cursor-pointer px-7 py-3 font-medium text-white transition hover:bg-[#0138ab]"
           >
             Submit

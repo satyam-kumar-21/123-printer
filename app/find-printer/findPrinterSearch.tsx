@@ -165,12 +165,12 @@ export default function FindPrinterSearch() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSearch = (valueToSubmit = search) => {
-    if (!valueToSubmit.trim()) return;
+  const handleSearch = () => {
+    if (!search.trim()) return;
 
     // Save the search input value in localStorage
     if (typeof window !== "undefined") {
-      localStorage.setItem("printerModel", valueToSubmit.trim());
+      localStorage.setItem("printerModel", search.trim());
       if (option) {
         localStorage.setItem("printerPurpose", option);
       }
@@ -247,9 +247,8 @@ export default function FindPrinterSearch() {
                       <button
                         type="button"
                         onClick={() => {
-                          setSearch(model);
-                          setShowDropdown(false);
-                          handleSearch(model);
+                          setSearch(model);       // Fills the search box value
+                          setShowDropdown(false); // Closes dropdown panel securely
                         }}
                         className="w-full text-left px-5 py-3 text-sm text-gray-800 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors duration-150 cursor-pointer"
                       >
@@ -264,7 +263,7 @@ export default function FindPrinterSearch() {
             {/* Submit Button */}
             <div className="mt-5">
               <button
-                onClick={() => handleSearch()}
+                onClick={handleSearch}
                 className="cursor-pointer rounded bg-[#024AD8] px-8 py-3 text-[17px] font-medium text-white transition hover:bg-[#0138ab]"
               >
                 Submit
