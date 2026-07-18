@@ -1,8 +1,98 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+const PRINTER_MODELS = [
+  "HP LaserJet M110w Wireless Black & White Printer",
+  "HP LaserJet M140w Wireless Black & White Printer",
+  "HP LaserJet Enterprise M507dn",
+  "HP LaserJet MFP M234dw Printer",
+  "HP LaserJet Enterprise M507n",
+  "HP LaserJet M209dw Printer",
+  "HP LaserJet Pro MFP 3101fdw Wireless",
+  "HP LaserJet Pro 3001dw Wireless Printer",
+  "HP LaserJet Enterprise M406dn",
+  "HP LaserJet Enterprise MFP M430f",
+  "HP LaserJet Pro 4001dw Wireless Printer",
+  "HP LaserJet MFP M234sdw Printer",
+  "HP LaserJet Pro M501dn",
+  "HP LaserJet Tank MFP 2604sdw Printer",
+  "HP LaserJet Pro MFP 4101fdn Printer",
+  "HP LaserJet Pro 4001dn Printer",
+  "HP LaserJet Pro MFP 4101fdw Wireless",
+  "HP DeskJet 3755 All-in-One Printer",
+  "HP Smart Tank 7001 All-in-One Printer",
+  "HP Smart Tank 6001 All-in-One",
+  "HP ENVY Inspire 7255e All-in-One Printer",
+  "HP LaserJet Tank MFP 2604sdw",
+  "HP ENVY 6055e All-in-One Printer",
+  "HP OfficeJet Pro 9110b Wireless Printer",
+  "HP Deskjet 4155e All-in-One Printer",
+  "HP OfficeJet 8015e All-in-One Printer",
+  "HP Smart Tank Plus 651",
+  "HP OfficeJet Pro 8135e Wireless",
+  "HP DeskJet 4255e All-in-One Printer",
+  "HP DeskJet 2855e All-in-One Printer",
+  "HP Smart Tank 5101 All-in-One Printer",
+  "HP ENVY 6455e All-in-One Printer",
+  "HP Smart Tank 7602 All-in-One",
+  "HP Smart Tank 5000 All-in-One Printer",
+  "HP OfficeJet Pro 9730e",
+  "HP OfficeJet Pro 9125e All-in-One Printer",
+  "HP ENVY Inspire 7955e All-in-One Printer",
+  "HP Smart Tank 7301 All-in-One Printer",
+  "HP OfficeJet Pro 9135e Wireless All-in-One Printer",
+  "HP OfficeJet Pro 8034e All-in-One Printer",
+  "HP Color LaserJet Pro MFP 3301fdw",
+  "HP LaserJet Pro 4001dn",
+  "HP DeskJet 1112",
+  "HP DeskJet 2130",
+  "HP DeskJet 2622",
+  "HP DeskJet 3630",
+  "HP DeskJet 3755",
+  "HP Envy 4500",
+  "HP Envy 5055",
+  "HP Envy 5530",
+  "HP Envy 7640",
+  "HP Envy Photo 7855",
+  "HP OfficeJet 3830",
+  "HP OfficeJet 5255",
+  "HP OfficeJet 6978",
+  "HP OfficeJet 8025",
+  "HP OfficeJet Pro 9015",
+  "HP LaserJet Pro M15w",
+  "HP LaserJet Pro MFP M29w",
+  "HP LaserJet Pro MFP M130fw",
+  "HP LaserJet Pro M404dn",
+  "HP LaserJet Enterprise MFP M527f",
+  "HP Color LaserJet Pro MFP M283fdw",
+  "HP Color LaserJet Pro MFP M477fnw",
+  "HP Color LaserJet Enterprise MFP M680f",
+  "HP Color LaserJet Pro M452dw",
+  "HP Color LaserJet Enterprise M751n",
+  "HP PageWide Pro 477dw",
+  "HP PageWide Pro 577dw",
+  "HP PageWide Enterprise Color 556dn",
+  "HP PageWide Managed Color MFP P77940dn",
+  "HP PageWide Enterprise Color Flow MFP 785zs",
+  "HP Tango",
+  "HP Tango X",
+  "HP DesignJet T120",
+  "HP DesignJet T520",
+  "HP DesignJet Z9+",
+  "HP DesignJet T830",
+  "HP DesignJet T2500",
+  "HP Neverstop Laser 1000w",
+  "HP Neverstop Laser MFP 1202w",
+  "Photosmart A310 Printer",
+  "Photosmart A430 Portable Photo Studio Series",
+  "Officejet 6100 ePrinter series – H6",
+  "Officejet 7110 Wide Format ePrinter series – H8",
+  "Deskjet 310 / 310 with Sheetfeeder",
+  "Deskjet 320 / 320 with Sheetfeeder"
+];
 
 const printerImages = [
   "/Deskjet.png",
@@ -14,11 +104,14 @@ const slides = [...printerImages, ...printerImages];
 
 export default function FindPrinterSearch() {
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [current, setCurrent] = useState(0);
   const [animate, setAnimate] = useState(true);
   const [search, setSearch] = useState("");
   const [option, setOption] = useState("");
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // Auto Slider
   useEffect(() => {
@@ -47,12 +140,40 @@ export default function FindPrinterSearch() {
     }
   }, [current]);
 
-  const handleSearch = () => {
-    if (!search.trim()) return;
+  // Compute live match recommendations based on current search input
+  useEffect(() => {
+    if (!search.trim()) {
+      setFilteredSuggestions([]);
+      return;
+    }
+
+    const query = search.toLowerCase();
+    const filtered = PRINTER_MODELS.filter((model) =>
+      model.toLowerCase().includes(query)
+    );
+    setFilteredSuggestions(filtered);
+  }, [search]);
+
+  // Dismiss dropdown menu when clicking completely outside the element tree
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearch = (valueToSubmit = search) => {
+    if (!valueToSubmit.trim()) return;
 
     // Save the search input value in localStorage
     if (typeof window !== "undefined") {
-      localStorage.setItem("printerModel", search.trim());
+      localStorage.setItem("printerModel", valueToSubmit.trim());
+      if (option) {
+        localStorage.setItem("printerPurpose", option);
+      }
     }
 
     router.push("/hp-smart-install/");
@@ -65,7 +186,7 @@ export default function FindPrinterSearch() {
         <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
 
           {/* Left Side */}
-          <div className="max-w-2xl">
+          <div className="max-w-2xl w-full">
 
             {/* Radio Buttons */}
             <div className="space-y-3">
@@ -94,26 +215,56 @@ export default function FindPrinterSearch() {
               </label>
             </div>
 
-            {/* Input Element */}
+            {/* Input Element Wrapper */}
             <p className="mt-8 mb-3 text-[17px] text-gray-700">
               Enter your serial number, product number or product name
             </p>
 
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSearch();
-              }}
-              placeholder="Example: HP DeskJet 2632 All-in-One Printer"
-              className="w-full max-w-[560px] rounded border border-gray-300 bg-white px-5 py-4 text-[17px] outline-none transition focus:border-[#024AD8]"
-            />
+            <div ref={dropdownRef} className="relative w-full max-w-[560px]">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setShowDropdown(true);
+                }}
+                onFocus={() => setShowDropdown(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                    setShowDropdown(false);
+                  }
+                }}
+                placeholder="Example: HP DeskJet 2632 All-in-One Printer"
+                className="w-full rounded border border-gray-300 bg-white px-5 py-4 text-[17px] outline-none transition focus:border-[#024AD8] relative z-20"
+              />
+
+              {/* Suggestions Overlay Dropdown Container */}
+              {showDropdown && filteredSuggestions.length > 0 && (
+                <ul className="absolute left-0 right-0 top-full mt-1 max-h-60 overflow-y-auto rounded border border-gray-200 bg-white shadow-xl z-30 divide-y divide-gray-50">
+                  {filteredSuggestions.map((model, idx) => (
+                    <li key={idx}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearch(model);
+                          setShowDropdown(false);
+                          handleSearch(model);
+                        }}
+                        className="w-full text-left px-5 py-3 text-sm text-gray-800 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors duration-150 cursor-pointer"
+                      >
+                        {model}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             {/* Submit Button */}
             <div className="mt-5">
               <button
-                onClick={handleSearch}
+                onClick={() => handleSearch()}
                 className="cursor-pointer rounded bg-[#024AD8] px-8 py-3 text-[17px] font-medium text-white transition hover:bg-[#0138ab]"
               >
                 Submit
@@ -123,7 +274,7 @@ export default function FindPrinterSearch() {
           </div>
 
           {/* Right Slider */}
-          <div className="border-l border-gray-300 pl-10">
+          <div className="border-l border-gray-300 pl-10 hidden lg:block">
             <div className="relative h-[300px] overflow-hidden">
               <div
                 className={`flex h-full ${
