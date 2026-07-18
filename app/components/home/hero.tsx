@@ -92,7 +92,7 @@ export default function Hero() {
                 }}
               >
                 <Image
-                  src="/hero-home.jpg"
+                  src="/hero-home.webp"
                   alt="Customer Support"
                   fill
                   priority
