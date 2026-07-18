@@ -17,11 +17,11 @@ export default function Hero() {
               <div className="flex items-center gap-5">
                 <div>
                   <h1 className="text-3xl font-semibold leading-tight text-white md:text-4xl xl:text-5xl">
-                    Exclusive Tech Support
+                    Exclusive Printer Support
                   </h1>
 
                   <p className="mt-3 max-w-xl text-base leading-7 text-white/90 md:text-lg">
-                    Call now to speak directly with a live device support expert.
+                    Call now to speak directly with a live support expert.
                   </p>
                 </div>
               </div>
