@@ -8,7 +8,7 @@ const images = [
   "/slider-2.webp",
 ];
 
-const slides = [...images, ...images]; // duplicate
+const slides = [...images, ...images]; // duplicate for seamless scrolling
 
 export default function BottomSlider() {
   const [current, setCurrent] = useState(0);
@@ -17,7 +17,7 @@ export default function BottomSlider() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => prev + 1);
-    }, 3000);
+    }, 4500);
 
     return () => clearInterval(interval);
   }, []);
@@ -33,7 +33,7 @@ export default function BottomSlider() {
             setAnimate(true);
           });
         });
-      }, 700); // same as transition duration
+      }, 700); // matches the transform transition-duration configuration speed below
 
       return () => clearTimeout(timer);
     }
@@ -43,7 +43,7 @@ export default function BottomSlider() {
     <section className="bg-white py-8">
       <div className="mx-auto max-w-5xl px-4">
 
-        <div className="relative h-[190px] overflow-hidden rounded-md">
+        <div className="relative h-[190px] overflow-hidden rounded-md shadow-sm">
 
           <div
             className={`flex h-full ${
@@ -62,9 +62,13 @@ export default function BottomSlider() {
               >
                 <Image
                   src={image}
-                  alt={`Slide ${index}`}
+                  alt={`Slide banner asset ${index}`}
                   fill
-                  className="object-cover"
+                  /* 
+                    object-left anchors the graphic container alignment to the left hand side.
+                    This prevents the text built inside the image from clipping out on smaller mobile displays.
+                  */
+                  className="object-cover object-left sm:object-center"
                   priority={index === 0}
                 />
               </div>
